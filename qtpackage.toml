@@ -1,0 +1,9 @@
+name = "Diff-match-patch"
+description = "Write your project description here"
+author = "shibukawa.yoshiki"
+organization = ""
+license = "Apache License v2.0"
+qtmodules = ["Core", "Gui", "Widgets"]
+version = [0, 1, 0]
+project_start_year = 2016
+qtpm_version = [0, 8, 1]
