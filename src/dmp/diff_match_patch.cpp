@@ -21,7 +21,6 @@
 
 #include <algorithm>
 #include <limits>
-// Code known to compile and run with Qt 4.3 through Qt 4.7.
 #include "diff_match_patch.h"
 #include <QtCore>
 #include <time.h>
