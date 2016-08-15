@@ -197,7 +197,7 @@ public:
      */
 private:
     QList<Diff> diff_main(const QString &text1, const QString &text2, bool checklines,
-                          clock_t deadline);
+                          qint64 deadline);
 
     /**
      * Find the differences between two texts.  Assumes that the texts do not
@@ -211,7 +211,7 @@ private:
      * @return Linked List of Diff objects.
      */
 private:
-    QList<Diff> diff_compute(QString text1, QString text2, bool checklines, clock_t deadline);
+    QList<Diff> diff_compute(QString text1, QString text2, bool checklines, qint64 deadline);
 
     /**
      * Do a quick line-level diff on both strings, then rediff the parts for
@@ -223,7 +223,7 @@ private:
      * @return Linked List of Diff objects.
      */
 private:
-    QList<Diff> diff_lineMode(QString text1, QString text2, clock_t deadline);
+    QList<Diff> diff_lineMode(QString text1, QString text2, qint64 deadline);
 
     /**
      * Find the 'middle snake' of a diff, split the problem in two
@@ -234,7 +234,7 @@ private:
      * @return Linked List of Diff objects.
      */
 protected:
-    QList<Diff> diff_bisect(const QString &text1, const QString &text2, clock_t deadline);
+    QList<Diff> diff_bisect(const QString &text1, const QString &text2, qint64 deadline);
 
     /**
      * Given the location of the 'middle snake', split the diff in two parts
@@ -248,7 +248,7 @@ protected:
      */
 private:
     QList<Diff> diff_bisectSplit(const QString &text1, const QString &text2, int x, int y,
-                                 clock_t deadline);
+                                 qint64 deadline);
 
     /**
      * Split two texts into a list of strings.  Reduce the texts to a string of

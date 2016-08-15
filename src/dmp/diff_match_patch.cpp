@@ -19,11 +19,11 @@
  * http://code.google.com/p/google-diff-match-patch/
  */
 
+#include "diff_match_patch.h"
+#include <QDateTime>
+#include <QtCore>
 #include <algorithm>
 #include <limits>
-#include "diff_match_patch.h"
-#include <QtCore>
-#include <time.h>
 
 //////////////////////////
 //
@@ -177,17 +177,17 @@ QList<Diff> diff_match_patch::diff_main(const QString &text1, const QString &tex
 QList<Diff> diff_match_patch::diff_main(const QString &text1, const QString &text2, bool checklines)
 {
     // Set a deadline by which time the diff must be complete.
-    clock_t deadline;
+    qint64 deadline;
     if (Diff_Timeout <= 0) {
-        deadline = std::numeric_limits<clock_t>::max();
+        deadline = std::numeric_limits<qint64>::max();
     } else {
-        deadline = clock() + (clock_t)(Diff_Timeout * CLOCKS_PER_SEC);
+        deadline = QDateTime::currentMSecsSinceEpoch() + (Diff_Timeout * 1000);
     }
     return diff_main(text1, text2, checklines, deadline);
 }
 
 QList<Diff> diff_match_patch::diff_main(const QString &text1, const QString &text2, bool checklines,
-                                        clock_t deadline)
+                                        qint64 deadline)
 {
     // Check for null inputs.
     if (text1.isNull() || text2.isNull()) {
@@ -232,7 +232,7 @@ QList<Diff> diff_match_patch::diff_main(const QString &text1, const QString &tex
 }
 
 QList<Diff> diff_match_patch::diff_compute(QString text1, QString text2, bool checklines,
-                                           clock_t deadline)
+                                           qint64 deadline)
 {
     QList<Diff> diffs;
 
@@ -298,7 +298,7 @@ QList<Diff> diff_match_patch::diff_compute(QString text1, QString text2, bool ch
     return diff_bisect(text1, text2, deadline);
 }
 
-QList<Diff> diff_match_patch::diff_lineMode(QString text1, QString text2, clock_t deadline)
+QList<Diff> diff_match_patch::diff_lineMode(QString text1, QString text2, qint64 deadline)
 {
     // Scan the text on a line-by-line basis first.
     const QList<QVariant> b = diff_linesToChars(text1, text2);
@@ -360,7 +360,7 @@ QList<Diff> diff_match_patch::diff_lineMode(QString text1, QString text2, clock_
 }
 
 QList<Diff> diff_match_patch::diff_bisect(const QString &text1, const QString &text2,
-                                          clock_t deadline)
+                                          qint64 deadline)
 {
     // Cache the text lengths to prevent multiple calls.
     const int text1_length = text1.length();
@@ -388,7 +388,8 @@ QList<Diff> diff_match_patch::diff_bisect(const QString &text1, const QString &t
     int k2end = 0;
     for (int d = 0; d < max_d; d++) {
         // Bail out if deadline is reached.
-        if (clock() > deadline) {
+        auto epoch = QDateTime::currentMSecsSinceEpoch();
+        if (epoch > deadline) {
             break;
         }
 
@@ -478,7 +479,7 @@ QList<Diff> diff_match_patch::diff_bisect(const QString &text1, const QString &t
 }
 
 QList<Diff> diff_match_patch::diff_bisectSplit(const QString &text1, const QString &text2, int x,
-                                               int y, clock_t deadline)
+                                               int y, qint64 deadline)
 {
     QString text1a = text1.left(x);
     QString text2a = text2.left(y);
@@ -1477,7 +1478,7 @@ int diff_match_patch::match_bitap(const QString &text, const QString &pattern, i
                 rd[j] = ((rd[j + 1] << 1) | 1) & charMatch;
             } else {
                 // Subsequent passes: fuzzy match.
-                rd[j] = ((rd[j + 1] << 1) | 1) & charMatch
+                rd[j] = (((rd[j + 1] << 1) | 1) & charMatch)
                         | (((last_rd[j + 1] | last_rd[j]) << 1) | 1) | last_rd[j + 1];
             }
             if ((rd[j] & matchmask) != 0) {

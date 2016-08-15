@@ -24,7 +24,10 @@
 #include <QDebug>
 #include <QtCore>
 
-TestDiffMatchPatch::TestDiffMatchPatch() : QObject() {}
+TestDiffMatchPatch::TestDiffMatchPatch()
+    : QObject()
+{
+}
 
 //  DIFF TEST FUNCTIONS
 
@@ -1169,14 +1172,14 @@ void TestDiffMatchPatch::assertEquals(const char *strCase, const QMap<QChar, int
 
     if (i1.hasNext()) {
         i1.next();
-        qDebug("%s FAIL\nExpected: (%c, %d)\nActual: none", qPrintable(strCase), i1.key().toLatin1(),
-               i1.value());
+        qDebug("%s FAIL\nExpected: (%c, %d)\nActual: none", qPrintable(strCase),
+               i1.key().toLatin1(), i1.value());
         QFAIL(strCase);
     }
     if (i2.hasNext()) {
         i2.next();
-        qDebug("%s FAIL\nExpected: none\nActual: (%c, %d)", qPrintable(strCase), i2.key().toLatin1(),
-               i2.value());
+        qDebug("%s FAIL\nExpected: none\nActual: (%c, %d)", qPrintable(strCase),
+               i2.key().toLatin1(), i2.value());
         QFAIL(strCase);
     }
 }
@@ -1187,15 +1190,9 @@ void TestDiffMatchPatch::assertEquals(const char *strCase, const QStringList &li
     QVERIFY2(list1 == list2, strCase);
 }
 
-void TestDiffMatchPatch::assertTrue(const char *strCase, bool value)
-{
-    QVERIFY2(value, strCase);
-}
+void TestDiffMatchPatch::assertTrue(const char *strCase, bool value) { QVERIFY2(value, strCase); }
 
-void TestDiffMatchPatch::assertFalse(const char *strCase, bool value)
-{
-    QVERIFY2(!value, strCase);
-}
+void TestDiffMatchPatch::assertFalse(const char *strCase, bool value) { QVERIFY2(!value, strCase); }
 
 // Construct the two texts which made up the diff originally.
 QStringList TestDiffMatchPatch::diff_rebuildtexts(QList<Diff> diffs)
